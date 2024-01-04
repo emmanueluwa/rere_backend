@@ -39,6 +39,7 @@ SIMPLE_JWT = {
 # Application definition
 
 INSTALLED_APPS = [
+    "graphene_django",
     "corsheaders",
     "rest_framework",
     "customers",
@@ -49,6 +50,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+#graphql settings
+GRAPHENE = {
+  "SCHEMA": "customers.schema.schema",
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -61,6 +67,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+APPEND_SLASH = True
 
 REST_FRAMEWORK = {
   "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",)

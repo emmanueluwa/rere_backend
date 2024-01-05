@@ -13,6 +13,7 @@ class OrderType(DjangoObjectType):
     model = Order
     fields = "__all__"
 
+
 class CreateCustomer(graphene.Mutation):
   #data expected in order to create a new customer
   class Arguments:
@@ -28,6 +29,24 @@ class CreateCustomer(graphene.Mutation):
     customer = Customer(name=name, industry=industry)
     customer.save()
     return CreateCustomer(customer=customer)
+
+#create new order related to a customer id
+class CreateOrder(graphene.Mutation):
+  #data expected in creation of new order
+  class Arguments:
+    description = graphene.String()
+    total_in_pence = graphene.Int()
+    #grab the associated customer
+    customer = graphene.ID()
+
+  order = graphene.Field(OrderType)
+
+  def mutate(root, info, description, total_in_pence, customer):
+    #define order object and save to db
+    order = Order(description=description, total_in_pence=total_in_pence, customer_id=customer)
+    order.save()
+    return CreateOrder(order=order)
+
 
 
 class Query(graphene.ObjectType):
@@ -53,6 +72,7 @@ class Query(graphene.ObjectType):
 
 #crud operations
 class Mutations(graphene.ObjectType):
-  createCustomer = CreateCustomer.Field()
+  create_customer = CreateCustomer.Field()
+  create_order = CreateOrder.Field()
 
 schema = graphene.Schema(query=Query, mutation=Mutations)
